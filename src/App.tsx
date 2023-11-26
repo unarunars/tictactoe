@@ -1,6 +1,5 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Box, Button, ChakraProvider, Heading } from '@chakra-ui/react'
+
+import { Box, ChakraProvider } from '@chakra-ui/react'
 import './App.css';
 import Game from './Game';
 
@@ -11,8 +10,6 @@ function App() {
           <Game/>
         </Box>
     </ChakraProvider>
-    
-    
   );
 }
 
