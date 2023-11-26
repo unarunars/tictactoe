@@ -2,7 +2,6 @@
 export const getIndex = (data: any) => {
     // Check for a winning move for "O"
     let winningIndex = getIndexBasedOnPlayer(data, "O");
-    console.log(winningIndex)
     // If there is a winning move, return the index
     if (winningIndex !== 9 && winningIndex !== undefined && data[winningIndex] === "") {
         return winningIndex;

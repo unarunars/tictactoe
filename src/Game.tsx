@@ -43,12 +43,14 @@ function Game() {
         if (isNewGame) {
             setIsNewGame(false);
         }else {
-            if (data[index] == "" ) {
+            if (data[index] === "" ) {
                 data[index] = player;
                 setUpdatedData(data)   
             }
-            setPlayer((prevPlayer) => (prevPlayer === "X" ? "O" : "X"));
-            isWinner(player);
+            let iswinner = isWinner(player);
+            if (!iswinner) {
+                setPlayer((prevPlayer) => (prevPlayer === "X" ? "O" : "X"));
+            }
             if (!isTwoPlayer && turns % 2 !== 0 && winner === "" && turns !== 9) {
                 setTimeout(computerTurn, 500);      
             }
@@ -58,15 +60,14 @@ function Game() {
 
     // Function to handle player's turn
     const turn = (index: number) => {
-        if (!isTwoPlayer && player === "O" && winner === "") {
-            console.log(isTwoPlayer)
-            console.log(player)
-            computerTurn();
-        }
-        if (data[index] == "" ) {
+        if (data[index] ==="" ) {
             setTurns((prevTurns) => prevTurns + 1);   
             setIndex(index);
             setData(updatedData);
+        }
+        if (!isTwoPlayer && player === "O" && winner === "") {
+            console.log(winner)
+            computerTurn();
         }
     };
 
@@ -86,6 +87,7 @@ function Game() {
         setModalHeader("👏👏🥇Congrats!🥇👏👏")
         setModalText(`Winner is ${player} 🤩`)
         onOpen();
+        return true;
     }
 
     // Function to handle a draw game
@@ -108,24 +110,25 @@ function Game() {
         // Check all possible winning combinations
         // If there is a winner, call gameFinished function
         // If no winner, check for a draw game
-        if (data[0] == data[1] && data[1] == data[2] && data[0] != "") {
-            gameFinished();
-        } else if (data[3] == data[4] && data[4] == data[5] && data[3] != "") {
-            gameFinished();
-        } else if (data[6] == data[7] && data[7] == data[8] && data[6] != "") {
-            gameFinished();
-        } else if (data[0] == data[3] && data[3] == data[6] && data[0] != "") {
-            gameFinished();
-        } else if (data[1] == data[4] && data[4] == data[7] && data[1] != "") {
-            gameFinished();
-        } else if (data[2] == data[5] && data[5] == data[8] && data[2] != "") {
-            gameFinished();
-        } else if (data[0] == data[4] && data[4] == data[8] && data[0] != "") {
-            gameFinished();
-        } else if (data[2] == data[4] && data[4] == data[6] && data[2] != "") {
-            gameFinished();
+        if (data[0] === data[1] && data[1] === data[2] && data[0] != "") {
+            return gameFinished();
+        } else if (data[3] === data[4] && data[4] === data[5] && data[3] != "") {
+            return gameFinished();
+        } else if (data[6] === data[7] && data[7] === data[8] && data[6] != "") {
+            return gameFinished();
+        } else if (data[0] === data[3] && data[3] === data[6] && data[0] != "") {
+            return gameFinished();
+        } else if (data[1] === data[4] && data[4] === data[7] && data[1] != "") {
+            return gameFinished();
+        } else if (data[2] === data[5] && data[5] === data[8] && data[2] != "") {
+            return gameFinished();
+        } else if (data[0] === data[4] && data[4] === data[8] && data[0] != "") {
+            return gameFinished();
+        } else if (data[2] === data[4] && data[4] === data[6] && data[2] != "") {
+            return gameFinished();
         }else{
             drawGame();
+            return false;
         }
     }
 
@@ -167,25 +170,25 @@ function Game() {
     // Function to render the game modal
     const gameModal = () => {
         return (
-            <Modal isOpen={isOpen} onClose={newGame}>
+            <Modal isOpen={isOpen} onClose={continueGame}>
                 <ModalOverlay />
                 <ModalContent>
-                <ModalHeader>{modalHeader}</ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                    <Text>{modalText}</Text>
-                    <Text>The score is now: </Text>
-                    <Text>Player X: {xScore}</Text>
-                    <Text>Player O: {oScore}</Text>
-                </ModalBody>
-                <ModalFooter>
-                <Button colorScheme='blue' mr={3} onClick={continueGame}>
-                    Continue
-                    </Button>
-                    <Button variant='ghost' mr={3} onClick={newGame}>
-                    New game
-                    </Button>
-                </ModalFooter>
+                    <ModalHeader>{modalHeader}</ModalHeader>
+                        <ModalCloseButton />
+                    <ModalBody>
+                        <Text>{modalText}</Text>
+                        <Text>The score is now: </Text>
+                        <Text>Player X: {xScore}</Text>
+                        <Text>Player O: {oScore}</Text>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={continueGame}>
+                            Continue
+                        </Button>
+                        <Button variant='ghost' mr={3} onClick={newGame}>
+                            New game
+                        </Button>
+                    </ModalFooter>
                 </ModalContent>
             </Modal>
         )
@@ -197,59 +200,47 @@ function Game() {
             <>
             <Flex dir='row' fontSize={"300%"} >
                 <Box w={"150px"} h={"150px"}  borderRight={"5px solid"} borderBottom={"5px solid"} 
-                onClick={() => turn(0)}
-                >
+                onClick={() => turn(0)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[0]}</Text>
                 </Box>
                 <Box w={"150px"} h={"150px"}  borderBottom={"5px solid"} alignItems={"center"}
-                onClick={() => turn(1)}
-                >
+                onClick={() => turn(1)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[1]}</Text>
-
                 </Box>
                 <Box w={"150px"} h={"150px"}  borderLeft={"5px solid"} borderBottom={"5px solid"} alignItems={"center"}
-                onClick={() => turn(2)}
-                >
+                onClick={() => turn(2)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[2]}</Text>
-
                 </Box>
             </Flex>
             <Flex dir='row' fontSize={"300%"}>
                 <Box w={"150px"} h={"150px"} borderRight={"5px solid"} 
-                onClick={() => turn(3)}
-                >
+                onClick={() => turn(3)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[3]}</Text>
                 </Box>
                 <Box w={"150px"} h={"150px"}
-                onClick={() => turn(4)}
-                >
+                onClick={() => turn(4)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[4]}</Text>
                 </Box>
                 <Box w={"150px"} h={"150px"} borderLeft={"5px solid"}
-                onClick={() => turn(5)}
-                >
+                onClick={() => turn(5)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[5]}</Text>
                 </Box>
             </Flex>
             <Flex dir='row' fontSize={"300%"}>
                 <Box w={"150px"} h={"150px"}  borderRight={"5px solid"} borderTop={"5px solid"}
-                onClick={() => turn(6)}
-                >
+                onClick={() => turn(6)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[6]}</Text>
                 </Box>
                 <Box w={"150px"} h={"150px"} borderTop={"5px solid"} 
-                onClick={() => turn(7)}
-                >
+                onClick={() => turn(7)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[7]}</Text>
                 </Box>
                 <Box w={"150px"} h={"150px"}  borderLeft={"5px solid"} borderTop={"5px solid"} 
-                onClick={() => turn(8)}
-                >
+                onClick={() => turn(8)}>
                     <Text textAlign={"center"} alignItems={"stretch"}>{data[8]}</Text>
                 </Box>
             </Flex>
         </>
-
         )
     }
 
@@ -259,14 +250,18 @@ function Game() {
         <>
             <Box height={"100%"} width={"auto"} >
                 <Box mb={"7%"} textAlign={"start"}>
-                    {!isTwoPlayer ? (player === "X" ? <Heading>Your turn</Heading> : <Heading>Computers Turn</Heading>) : 
-                    <Heading>Player {player} turn</Heading> }
+                    {!isTwoPlayer ? (player === "X" ? <Text>Your turn</Text> : <Text>Computers Turn</Text>) : 
+                    <Text>Player {player} turn</Text> }
                 </Box>
                 <Divider />
-                <Box h={"50%"} textAlign={"start"} alignItems={"center"} mt={"7%"}>
+                <Box h={"35%"} textAlign={"start"} alignItems={"center"} mt={"7%"}>
                     <Heading>Score</Heading>
                     <Text>Player X: {xScore}</Text>
                     <Text>Player O: {oScore}</Text>
+                </Box>
+                <Divider />
+                <Box h={"15%"} textAlign={"start"} alignItems={"center"} mt={"3%"} >
+                    {isTwoPlayer ? <Text>Two players mode</Text> : <Text>One player mode</Text>}
                 </Box>
                 <Divider />
                 <Box h={"7%"}>
@@ -286,20 +281,19 @@ function Game() {
           </Heading>
           <Flex dir='column' w={"100%"} height={"auto"} alignContent={"center"}>
             <Box w={"60%"} h={"100%"} color={"white"} bg={"#282c34"}>
-                
-                    <Flex alignSelf={"center"} justifyContent={"center"}>
+                <Flex alignSelf={"center"} justifyContent={"center"}>
                     <Box>
                         {board()}
                     </Box>
-                    </Flex>
+                </Flex>
             </Box>
             <Card w={"400px"}>
                 <CardBody className='ScoreBoard'>
-                {scoreBoard()}
+                    {scoreBoard()}
                 </CardBody>
             </Card>
-            </Flex>
-            {gameModal()}
+        </Flex>
+        {gameModal()}
     </Box>
 
   );
