@@ -5,14 +5,9 @@ import './App.css';
 import Game from './Game';
 
 function App() {
-  
-  const startGame = () => {
-    console.log('start game');
-  }
   return (
       <ChakraProvider>
         <Box height={"100vh"} className='App'>
-          
           <Game/>
         </Box>
     </ChakraProvider>
